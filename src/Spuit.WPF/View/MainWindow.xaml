@@ -1,0 +1,76 @@
+﻿<ui:FluentWindow
+    x:Class="Spuit.WPF.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:l="clr-namespace:Spuit.WPF.Localization"
+    xmlns:local="clr-namespace:Spuit.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:Spuit.WPF.Controls"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Width="200"
+    Height="250"
+    MaxWidth="200"
+    MaxHeight="250"
+    d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+    Background="{x:Null}"
+    Icon="pack://application:,,,/Spuit;component/Resources/icon.ico"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <ui:FluentWindow.InputBindings>
+        <KeyBinding Key="S" Command="{Binding SpuitToggleCommand}" />
+    </ui:FluentWindow.InputBindings>
+    <ui:FluentWindow.Resources>
+        <local:BooleanReverseConverter x:Key="BooleanReverseConverter" />
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ui:TitleBar Title="Spuit" ShowMaximize="False">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon
+                    Width="16"
+                    Height="16"
+                    Source="pack://application:,,,/Spuit;component/Resources/icon.ico" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+        <Grid Grid.Row="1">
+            <StackPanel
+                Margin="10,0,10,0"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                <StackPanel
+                    Margin="5,0,5,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <ui:DropDownButton Content="Menu" IsEnabled="{Binding EnableSpuit, Converter={StaticResource BooleanReverseConverter}}">
+                        <ui:DropDownButton.Flyout>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CopyHexCommand}" Header="{x:Static l:Lang.COPY_HEX}" />
+                                <MenuItem Command="{Binding CopyRgbCommand}" Header="{x:Static l:Lang.COPY_RGB}" />
+                                <MenuItem Command="{Binding CopyHslCommand}" Header="{x:Static l:Lang.COPY_HSL}" />
+                                <MenuItem Command="{Binding CopyCursorCommand}" Header="{x:Static l:Lang.COPY_CURSOR_POSITION}" />
+                                <MenuItem Command="{Binding CopyJsonCommand}" Header="{x:Static l:Lang.COPY_AS_JSON}" />
+                            </ContextMenu>
+                        </ui:DropDownButton.Flyout>
+                    </ui:DropDownButton>
+                </StackPanel>
+                <uc:PaletteCard
+                    Grid.Row="0"
+                    EnableSpuit="{Binding EnableSpuit, Mode=TwoWay}"
+                    XValue="{Binding CursorX}"
+                    YValue="{Binding CursorY}"
+                    Color="{Binding ColorHex}" />
+                <uc:ValuesCard
+                    Grid.Row="1"
+                    HSL="{Binding ColorHSL}"
+                    Hex="{Binding ColorHex}"
+                    RGB="{Binding ColorRGB}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

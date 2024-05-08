@@ -1,0 +1,79 @@
+﻿<UserControl
+    x:Class="Spuit.WPF.Controls.PaletteCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:l="clr-namespace:Spuit.WPF.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="Root"
+    mc:Ignorable="d">
+
+    <ui:Card Margin="5,5,5,5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                <ToggleButton
+                    Margin="0,5,0,5"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding EnableSpuit, ElementName=Root}"
+                    ToolTip="{x:Static l:Lang.S_KEY_TO_TURN_DROPPER}">
+                    <ui:SymbolIcon Symbol="Syringe20" />
+                </ToggleButton>
+                <Rectangle
+                    Width="30"
+                    Height="30"
+                    Fill="{Binding Color, ElementName=Root}"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Grid Margin="10,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Text="X" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Text="Y" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Normal"
+                        Text="{Binding XValue, ElementName=Root}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Normal"
+                        Text="{Binding YValue, ElementName=Root}" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </ui:Card>
+</UserControl>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spuit.Core", "src\Spuit.Core\Spuit.Core.csproj", "{160234CB-A8D0-4782-9DBC-316C40573D7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spuit.WPF", "src\Spuit.WPF\Spuit.WPF.csproj", "{B26E69C8-1F1E-45AF-82E5-6C9FF28B3655}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{160234CB-A8D0-4782-9DBC-316C40573D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160234CB-A8D0-4782-9DBC-316C40573D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160234CB-A8D0-4782-9DBC-316C40573D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160234CB-A8D0-4782-9DBC-316C40573D7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B26E69C8-1F1E-45AF-82E5-6C9FF28B3655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B26E69C8-1F1E-45AF-82E5-6C9FF28B3655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B26E69C8-1F1E-45AF-82E5-6C9FF28B3655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B26E69C8-1F1E-45AF-82E5-6C9FF28B3655}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0914942E-2A6B-452A-A43F-0CBF896130A1}
+	EndGlobalSection
+EndGlobal

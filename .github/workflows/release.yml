@@ -1,0 +1,76 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    env:
+      Configuration: Release
+      SolutionName: Spuit.sln
+      WpfProject: src/Spuit.WPF/Spuit.WPF.csproj
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get the latest tag
+        id: get_tag
+        run: |
+          $v = "${{ github.ref_name }}"
+          $v = $v -replace "v", ""
+          echo "VERSION=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Set zip file name
+        id: zip_name
+        run: |
+          echo "ZipFileName=Spuit_x64_win_${{ github.ref_name }}.zip" >> $env:GITHUB_OUTPUT
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore nuget packages
+        run: dotnet restore
+
+      - name: Unit tests
+        run: dotnet test
+
+      - name: Publish the application
+        run: dotnet publish $env:WpfProject --configuration $env:Configuration --property PublishDir=${{ github.workspace }}/publish/Spuit --property Version="$env:VERSION"
+        env:
+          VERSION: ${{ steps.get_tag.outputs.VERSION }}
+
+      - name: Copy README.md and LICENSE to publish directory
+        run: |
+          cp README.md ${{ github.workspace }}/publish
+          cp LICENSE ${{ github.workspace }}/publish
+
+      - name: Zip the publish directory
+        run: |
+          mkdir -Force ./dist
+          Compress-Archive -Path ${{ github.workspace }}\publish\* -DestinationPath ./dist/${{ env.ZipFileName }}
+          ls ./dist
+        env:
+          ZipFileName: ${{ steps.zip_name.outputs.ZipFileName }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/${{ env.ZipFileName }}
+          generate_release_notes: true
+          draft: true
+        env:
+          ZipFileName: ${{ steps.zip_name.outputs.ZipFileName }}
