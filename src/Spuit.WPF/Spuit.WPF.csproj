@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.19" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.20" />
     <EmbeddedResource Update="Localization\Lang.ja-JP.resx">
       <Generator></Generator>
     </EmbeddedResource>
