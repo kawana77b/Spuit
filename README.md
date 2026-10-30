@@ -11,6 +11,8 @@ The released executable is built exclusively for x64 Windows. The operating syst
 There is a zip containing the executable on the [Release page](https://github.com/kawana77b/Spuit/releases).
 This application is not signed.
 
+Building from source requires the .NET 10 SDK (LTS). If using Visual Studio, use Visual Studio 2026 (18.0) or later. The released executable is self-contained, so installing .NET separately is not required.
+
 ## Usage
 
 - Once the app is launched, click on the syringe icon or press the `S` key on the keyboard with the app in focus.
@@ -32,7 +34,7 @@ A typical example is [PowerToys](https://github.com/microsoft/PowerToys). This t
 
 A simple application, but includes the following small personal technical efforts:
 
-- 🧰 Provides examples of basic Windows application development with [WPF](https://learn.microsoft.com/en-US/dotnet/desktop/wpf/overview/?view=netdesktop-8.0) and [MVVM](https://learn.microsoft.com/en-us/windows/apps/develop/data-binding/data-binding-and-mvvm) models
+- 🧰 Provides examples of basic Windows application development with [WPF](https://learn.microsoft.com/en-US/dotnet/desktop/wpf/overview/?view=netdesktop-10.0) and [MVVM](https://learn.microsoft.com/en-us/windows/apps/develop/data-binding/data-binding-and-mvvm) models
 - 💻 Modern front end with [WPF-UI](https://wpfui.lepo.co/index.html)
 - 🌠 Use the relatively popular [CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm) for implementing MVVM (my favorite!)
 - 🎛️ Use relatively new .NET
