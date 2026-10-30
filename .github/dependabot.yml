@@ -8,13 +8,13 @@ updates:
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/src/Spuit.Core" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "yearly"
       time: "01:00"
       timezone: "Asia/Tokyo"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/src/Spuit.WPF" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "yearly"
       time: "01:00"
       timezone: "Asia/Tokyo"

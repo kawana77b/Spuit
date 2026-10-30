@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   release:
     runs-on: windows-latest
@@ -19,58 +23,61 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Get the latest tag
-        id: get_tag
+      - name: Prepare release metadata
+        id: metadata
+        env:
+          TAG_NAME: ${{ github.ref_name }}
         run: |
-          $v = "${{ github.ref_name }}"
-          $v = $v -replace "v", ""
-          echo "VERSION=$v" >> $env:GITHUB_OUTPUT
+          if ($env:TAG_NAME -notmatch '^v(?<version>[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)$') {
+            throw "Expected a version tag such as v1.2.3 or v1.2.3-rc.1."
+          }
+          "version=$($Matches.version)" >> $env:GITHUB_OUTPUT
+          "zip_name=Spuit_x64_win_$($env:TAG_NAME).zip" >> $env:GITHUB_OUTPUT
 
-      - name: Set zip file name
-        id: zip_name
-        run: |
-          echo "ZipFileName=Spuit_x64_win_${{ github.ref_name }}.zip" >> $env:GITHUB_OUTPUT
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore nuget packages
-        run: dotnet restore
+        run: dotnet restore "$env:SolutionName"
 
-      - name: Unit tests
-        run: dotnet test
+      - name: Build the solution
+        run: dotnet build "$env:SolutionName" --configuration "$env:Configuration" --no-restore
+
+      # No test projects currently exist; this runs any tests added to the solution later.
+      - name: Run available tests
+        run: dotnet test "$env:SolutionName" --configuration "$env:Configuration" --no-build --no-restore
 
       - name: Publish the application
-        run: dotnet publish $env:WpfProject --configuration $env:Configuration --property PublishDir=${{ github.workspace }}/publish/Spuit --property Version="$env:VERSION"
+        run: dotnet publish "$env:WpfProject" --configuration "$env:Configuration" --no-restore --output "$env:GITHUB_WORKSPACE/publish/Spuit" "-p:Version=$env:VERSION"
         env:
-          VERSION: ${{ steps.get_tag.outputs.VERSION }}
+          VERSION: ${{ steps.metadata.outputs.version }}
 
       - name: Copy README.md and LICENSE to publish directory
         run: |
-          cp README.md ${{ github.workspace }}/publish
-          cp LICENSE ${{ github.workspace }}/publish
+          Copy-Item -LiteralPath README.md, LICENSE -Destination "$env:GITHUB_WORKSPACE/publish"
 
       - name: Zip the publish directory
         run: |
-          mkdir -Force ./dist
-          Compress-Archive -Path ${{ github.workspace }}\publish\* -DestinationPath ./dist/${{ env.ZipFileName }}
-          ls ./dist
+          if (-not (Test-Path -LiteralPath "$env:GITHUB_WORKSPACE/publish/Spuit/Spuit.exe" -PathType Leaf)) {
+            throw "The published Spuit.exe is missing."
+          }
+          New-Item -ItemType Directory -Path ./dist -Force | Out-Null
+          Compress-Archive -Path "$env:GITHUB_WORKSPACE/publish/*" -DestinationPath "./dist/$env:ZipFileName" -Force
+          Get-Item -LiteralPath "./dist/$env:ZipFileName"
         env:
-          ZipFileName: ${{ steps.zip_name.outputs.ZipFileName }}
+          ZipFileName: ${{ steps.metadata.outputs.zip_name }}
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            dist/${{ env.ZipFileName }}
+          files: dist/${{ steps.metadata.outputs.zip_name }}
+          fail_on_unmatched_files: true
           generate_release_notes: true
           draft: true
-        env:
-          ZipFileName: ${{ steps.zip_name.outputs.ZipFileName }}
